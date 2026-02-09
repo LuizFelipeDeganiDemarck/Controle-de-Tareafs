@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Planner Dev</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="login" class="login">
+    <div class="loginBox">
+      <h2>Quem está usando?</h2>
+      <input id="nomeUsuario" placeholder="Seu nome" />
+      <button onclick="entrar()">Entrar</button>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="app" class="hidden">
+
+    <header>
+      <h1>Planner Dev</h1>
+      <div class="topActions">
+        <span id="user"></span>
+        <select id="filtro" onchange="render()">
+          <option value="">Todos</option>
+          <option value="Dev 1">Dev 1</option>
+          <option value="Dev 2">Dev 2</option>
+        </select>
+        <button onclick="exportar()">Exportar</button>
+        <button onclick="abrirModal()">+ Tarefa</button>
+      </div>
+    </header>
+
+    <main class="kanban">
+      <div class="coluna">
+        <h3>Aberto</h3>
+        <div id="Aberto"></div>
+      </div>
+
+      <div class="coluna">
+        <h3>Em andamento</h3>
+        <div id="Em andamento"></div>
+      </div>
+
+      <div class="coluna">
+        <h3>Concluído</h3>
+        <div id="Concluído"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL -->
+  <div id="modal" class="modal hidden">
+    <div class="modalContent">
+      <h2>Nova tarefa</h2>
+
+      <input id="titulo" placeholder="Título" />
+      <textarea id="descricao" placeholder="Descrição"></textarea>
+
+      <select id="prioridade">
+        <option>Alta</option>
+        <option>Média</option>
+        <option>Baixa</option>
+      </select>
+
+      <select id="responsavel">
+        <option>Dev 1</option>
+        <option>Dev 2</option>
+      </select>
+
+      <select id="equipe">
+        <option>Frontend</option>
+        <option>Backend</option>
+      </select>
+
+      <div class="actions">
+        <button onclick="fecharModal()">Cancelar</button>
+        <button onclick="salvar()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
