@@ -1,80 +1,106 @@
 let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
-let usuario = localStorage.getItem("usuario") || "";
+let filtroAtual = "Todos";
 
-function entrar() {
-  usuario = nomeUsuario.value;
-  localStorage.setItem("usuario", usuario);
-  document.getElementById("login").classList.add("hidden");
-  document.getElementById("app").classList.remove("hidden");
-  document.getElementById("user").innerText = usuario;
-  render();
-}
+function render(lista = tarefas) {
+  const container = document.getElementById("tarefas");
+  container.innerHTML = "";
 
-if (usuario) {
-  document.getElementById("login").classList.add("hidden");
-  document.getElementById("app").classList.remove("hidden");
-  document.getElementById("user").innerText = usuario;
-}
+  lista.forEach((t, i) => {
+    container.innerHTML += `
+      <div class="tarefa">
+        <h3>${t.titulo}</h3>
+        <p>${t.descricao}</p>
 
-function render() {
-  ["Aberto", "Em andamento", "Concluído"].forEach(c => {
-    document.getElementById(c).innerHTML = "";
-  });
+        <div class="tags">
+          <span class="tag prioridade-${t.prioridade}">${t.prioridade}</span>
+          <span class="tag status-${t.status}">${statusLabel(t.status)}</span>
+          <span class="tag">${t.responsavel}</span>
+          <span class="tag">${t.equipe}</span>
+        </div>
 
-  const filtro = document.getElementById("filtro").value;
+        <small>
+          📅 Início: ${t.dataInicio || "-"}<br>
+          ⏰ Prazo: ${t.prazo || "-"}<br>
+          ⏱ Horas: ${t.horas || 0}
+        </small>
 
-  tarefas.forEach((t, i) => {
-    if (filtro && t.responsavel !== filtro) return;
+        <select onchange="mudarStatus(${i}, this.value)">
+          <option value="NaoIniciada" ${t.status === "NaoIniciada" ? "selected" : ""}>Não iniciada</option>
+          <option value="EmAndamento" ${t.status === "EmAndamento" ? "selected" : ""}>Em andamento</option>
+          <option value="Concluida" ${t.status === "Concluida" ? "selected" : ""}>Concluída</option>
+        </select>
 
-    const card = document.createElement("div");
-    card.className = "card";
-
-    card.innerHTML = `
-      <strong>${t.titulo}</strong>
-      <p>${t.descricao}</p>
-      <div class="meta">${t.prioridade} | ${t.responsavel}</div>
-      <button onclick="avancar(${i})">Mover</button>
+        <button class="remove" onclick="remover(${i})">Remover</button>
+      </div>
     `;
-
-    document.getElementById(t.status).appendChild(card);
   });
 
   localStorage.setItem("tarefas", JSON.stringify(tarefas));
 }
 
-function salvar() {
+function salvarTarefa() {
   tarefas.push({
     titulo: titulo.value,
     descricao: descricao.value,
     prioridade: prioridade.value,
     responsavel: responsavel.value,
     equipe: equipe.value,
-    status: "Aberto",
+    dataInicio: dataInicio.value,
+    prazo: prazo.value,
+    horas: horas.value,
+    status: status.value
   });
 
   fecharModal();
-  render();
+  limparFormulario();
+  aplicarFiltro();
 }
 
-function avancar(i) {
-  const ordem = ["Aberto", "Em andamento", "Concluído"];
-  const idx = ordem.indexOf(tarefas[i].status);
-  tarefas[i].status = ordem[Math.min(idx + 1, 2)];
-  render();
+function remover(i) {
+  tarefas.splice(i, 1);
+  aplicarFiltro();
 }
 
-function exportar() {
-  const blob = new Blob([JSON.stringify(tarefas, null, 2)], { type: "application/json" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "tarefas.json";
-  a.click();
+function mudarStatus(i, status) {
+  tarefas[i].status = status;
+  aplicarFiltro();
+}
+
+function filtrar(status) {
+  filtroAtual = status;
+  aplicarFiltro();
+}
+
+function aplicarFiltro() {
+  if (filtroAtual === "Todos") {
+    render();
+  } else {
+    render(tarefas.filter(t => t.status === filtroAtual));
+  }
+}
+
+function statusLabel(status) {
+  return {
+    NaoIniciada: "Não iniciada",
+    EmAndamento: "Em andamento",
+    Concluida: "Concluída"
+  }[status];
 }
 
 function abrirModal() {
-  modal.classList.remove("hidden");
+  document.getElementById("modal").classList.remove("hidden");
 }
 
 function fecharModal() {
-  modal.classList.add("hidden");
+  document.getElementById("modal").classList.add("hidden");
 }
+
+function limparFormulario() {
+  titulo.value = "";
+  descricao.value = "";
+  horas.value = "";
+  dataInicio.value = "";
+  prazo.value = "";
+}
+
+render();

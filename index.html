@@ -8,77 +8,85 @@
 </head>
 <body>
 
-  <!-- LOGIN -->
-  <div id="login" class="login">
-    <div class="loginBox">
-      <h2>Quem está usando?</h2>
-      <input id="nomeUsuario" placeholder="Seu nome" />
-      <button onclick="entrar()">Entrar</button>
-    </div>
-  </div>
+  <header>
+    <h1>📋 Planner Dev</h1>
+    <button onclick="abrirModal()">+ Nova tarefa</button>
+  </header>
 
-  <!-- APP -->
-  <div id="app" class="hidden">
+  <section class="filtros">
+    <button onclick="filtrar('Todos')">Todos</button>
+    <button onclick="filtrar('NaoIniciada')">Não iniciadas</button>
+    <button onclick="filtrar('EmAndamento')">Em andamento</button>
+    <button onclick="filtrar('Concluida')">Concluídas</button>
+  </section>
 
-    <header>
-      <h1>Planner Dev</h1>
-      <div class="topActions">
-        <span id="user"></span>
-        <select id="filtro" onchange="render()">
-          <option value="">Todos</option>
-          <option value="Dev 1">Dev 1</option>
-          <option value="Dev 2">Dev 2</option>
-        </select>
-        <button onclick="exportar()">Exportar</button>
-        <button onclick="abrirModal()">+ Tarefa</button>
-      </div>
-    </header>
-
-    <main class="kanban">
-      <div class="coluna">
-        <h3>Aberto</h3>
-        <div id="Aberto"></div>
-      </div>
-
-      <div class="coluna">
-        <h3>Em andamento</h3>
-        <div id="Em andamento"></div>
-      </div>
-
-      <div class="coluna">
-        <h3>Concluído</h3>
-        <div id="Concluído"></div>
-      </div>
-    </main>
-  </div>
+  <main id="tarefas"></main>
 
   <!-- MODAL -->
   <div id="modal" class="modal hidden">
     <div class="modalContent">
       <h2>Nova tarefa</h2>
 
-      <input id="titulo" placeholder="Título" />
-      <textarea id="descricao" placeholder="Descrição"></textarea>
+      <label for="titulo">Título</label>
+      <input id="titulo" placeholder="Título da tarefa" />
 
-      <select id="prioridade">
-        <option>Alta</option>
-        <option>Média</option>
-        <option>Baixa</option>
-      </select>
+      <label for="descricao">Descrição</label>
+      <textarea id="descricao" placeholder="Descrição da tarefa"></textarea>
 
-      <select id="responsavel">
-        <option>Dev 1</option>
-        <option>Dev 2</option>
-      </select>
+      <div class="row">
+        <div class="col">
+          <label for="prioridade">Prioridade</label>
+          <select id="prioridade">
+            <option value="Alta">Alta</option>
+            <option value="Média">Média</option>
+            <option value="Baixa">Baixa</option>
+          </select>
+        </div>
 
-      <select id="equipe">
-        <option>Frontend</option>
-        <option>Backend</option>
+        <div class="col">
+          <label for="responsavel">Responsável</label>
+          <select id="responsavel">
+            <option value="Dev 1">Dev Bruna Tregnago</option>
+            <option value="Dev 2">Dev Luiz Demarck</option>
+          </select>
+        </div>
+
+        <div class="col">
+          <label for="equipe">Equipe</label>
+          <select id="equipe">
+            <option value="Frontend">Frontend</option>
+            <option value="Backend">Backend</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label for="dataInicio">Data de Início</label>
+          <input type="date" id="dataInicio" />
+        </div>
+
+        <div class="col">
+          <label for="prazo">Prazo</label>
+          <input type="date" id="prazo" />
+        </div>
+
+        <div class="col">
+          <label for="horas">Estimativa de Horas</label>
+          <input type="number" id="horas" placeholder="Horas" min="0" />
+        </div>
+      </div>
+
+      <label for="status">Status</label>
+      <select id="status">
+        <option value="NaoIniciada">Não iniciada</option>
+        <option value="EmAndamento">Em andamento</option>
+        <option value="Concluida">Concluída</option>
       </select>
 
       <div class="actions">
         <button onclick="fecharModal()">Cancelar</button>
-        <button onclick="salvar()">Salvar</button>
+        <button onclick="salvarTarefa()">Salvar</button>
       </div>
     </div>
   </div>
